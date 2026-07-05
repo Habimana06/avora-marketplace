@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS avora;
+USE avora;
+
+CREATE USER IF NOT EXISTS 'avora_user'@'%' IDENTIFIED BY 'avora_pass';
+GRANT ALL PRIVILEGES ON avora.* TO 'avora_user'@'%';
+FLUSH PRIVILEGES;

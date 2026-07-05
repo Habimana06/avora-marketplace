@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-primary font-body;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white px-8 py-3 font-semibold tracking-wider uppercase text-sm transition-all duration-300 hover:bg-surface;
+  }
+  
+  .btn-gold {
+    @apply bg-gold text-primary px-8 py-3 font-semibold tracking-wider uppercase text-sm transition-all duration-300 hover:opacity-90;
+  }
+  
+  .card-premium {
+    @apply bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+}
