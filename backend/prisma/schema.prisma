@@ -140,6 +140,8 @@ model Product {
   reviews      Review[]
   wishlist     WishlistItem[]
   production   Production[]
+  createdById  String?
+  approvalStatus String @default("APPROVED")
 }
 
 model Inventory {

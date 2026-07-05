@@ -1,26 +1,41 @@
-import { Outlet, Link } from 'react-router-dom'
-import AvoraLogo from '../components/AvoraLogo'
+import { Outlet, Link, NavLink } from 'react-router-dom';
+import AvoraLogo from '../components/AvoraLogo';
+import SiteFooter from '../components/SiteFooter';
+import { useCart } from '../context/CartContext';
+
+const linkClass = ({ isActive }) =>
+  `text-sm font-medium transition-colors ${isActive ? 'text-gold' : 'hover:text-gold'}`;
 
 export default function GuestLayout() {
+  const { itemCount } = useCart();
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
         <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <AvoraLogo to="/" size="md" />
-          
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-sm font-medium hover:text-gold transition-colors">Home</Link>
-            <Link to="/shop" className="text-sm font-medium hover:text-gold transition-colors">Shop</Link>
-            <Link to="/collections" className="text-sm font-medium hover:text-gold transition-colors">Collections</Link>
-            <Link to="/about" className="text-sm font-medium hover:text-gold transition-colors">About</Link>
+          <AvoraLogo to="/" size="md" variant="inline" wordSide="right" showTagline={false} />
+
+          <div className="hidden md:flex items-center gap-8">
+            <NavLink to="/" end className={linkClass}>Home</NavLink>
+            <NavLink to="/shop" className={linkClass}>Shop</NavLink>
+            <NavLink to="/collections" className={linkClass}>Collections</NavLink>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <button className="p-2 hover:text-gold transition-colors">
+          <div className="flex items-center gap-4">
+            <Link
+              to="/cart"
+              className="p-2.5 hover:text-gold transition-colors relative"
+              aria-label={`Shopping cart${itemCount ? `, ${itemCount} items` : ''}`}
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.5-5.5M9 15v6m6-6v6M3 9V5a2 2 0 012-2h14a2 2 0 012 2v4M3 9v12a2 2 0 002 2h18a2 2 0 002-2V9" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-            </button>
+              {itemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-gold text-primary text-[10px] font-bold flex items-center justify-center rounded-full">
+                  {itemCount > 9 ? '9+' : itemCount}
+                </span>
+              )}
+            </Link>
             <Link to="/login" className="px-6 py-2 text-sm font-semibold border border-primary hover:bg-primary hover:text-white transition-all">
               Sign In
             </Link>
@@ -32,42 +47,7 @@ export default function GuestLayout() {
         <Outlet />
       </main>
 
-      <footer className="bg-primary text-white py-20 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div>
-            <AvoraLogo to="/" size="sm" className="text-white [&_span]:text-white [&_span:last-child]:text-white/60" />
-            <p className="text-sm opacity-80">Luxury fashion crafted with African heritage.</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Shop</h4>
-            <ul className="space-y-2 text-sm opacity-80">
-              <li><a href="/shop" className="hover:opacity-100">All Products</a></li>
-              <li><a href="/collections" className="hover:opacity-100">Collections</a></li>
-              <li><a href="/new" className="hover:opacity-100">New Arrivals</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Support</h4>
-            <ul className="space-y-2 text-sm opacity-80">
-              <li><a href="/contact" className="hover:opacity-100">Contact</a></li>
-              <li><a href="/shipping" className="hover:opacity-100">Shipping</a></li>
-              <li><a href="/returns" className="hover:opacity-100">Returns</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Newsletter</h4>
-            <p className="text-sm opacity-80 mb-4">Subscribe for updates and exclusive offers.</p>
-            <div className="flex">
-              <input 
-                type="email" 
-                placeholder="Email address" 
-                className="flex-1 px-4 py-2 text-primary text-sm outline-none"
-              />
-              <button className="px-4 py-2 bg-gold text-primary font-semibold">→</button>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
-  )
+  );
 }

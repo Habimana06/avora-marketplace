@@ -10,7 +10,7 @@ export default {
         gold: '#B8892D',
         emerald: '#0F5E4B',
         royal: '#174A8B',
-        gray: '#909090',
+        muted: '#909090',
         error: '#D62828',
         success: '#2E7D32',
       },

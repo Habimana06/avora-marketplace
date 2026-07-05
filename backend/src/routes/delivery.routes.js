@@ -5,17 +5,36 @@ import { logAction } from '../utils/logger.js'
 
 const router = Router()
 
+router.get('/stats', authenticate, authorize(['DELIVERY', 'ADMINISTRATOR']), async (req, res) => {
+  try {
+    const where = req.user.role === 'ADMINISTRATOR' ? {} : { agentId: req.user.id }
+    
+    const [assigned, inTransit, delivered, failed] = await Promise.all([
+      prisma.delivery.count({ where: { ...where, status: 'ASSIGNED' } }),
+      prisma.delivery.count({ where: { ...where, status: 'IN_TRANSIT' } }),
+      prisma.delivery.count({ where: { ...where, status: 'DELIVERED' } }),
+      prisma.delivery.count({ where: { ...where, status: 'FAILED' } }),
+    ])
+
+    res.json({
+      stats: { assigned, inTransit, delivered, failed }
+    })
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch stats' })
+  }
+})
+
 router.get('/assigned', authenticate, authorize(['DELIVERY', 'ADMINISTRATOR']), async (req, res) => {
   try {
+    const where = req.user.role === 'ADMINISTRATOR' ? {} : { agentId: req.user.id }
+    
     const deliveries = await prisma.delivery.findMany({
-      where: req.user.role === 'ADMINISTRATOR' 
-        ? {} 
-        : { agentId: req.user.id },
+      where,
       include: { order: { include: { items: true } } },
       orderBy: { createdAt: 'desc' },
     })
     res.json({ deliveries })
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Failed to fetch deliveries' })
   }
 })
@@ -23,7 +42,7 @@ router.get('/assigned', authenticate, authorize(['DELIVERY', 'ADMINISTRATOR']), 
 router.put('/:orderId/status', authenticate, authorize(['DELIVERY', 'ADMINISTRATOR']), async (req, res) => {
   try {
     const { status, proofImage, notes } = req.body
-    
+
     const delivery = await prisma.delivery.update({
       where: { orderId: req.params.orderId },
       data: { status, proofImage, notes },
@@ -39,7 +58,7 @@ router.put('/:orderId/status', authenticate, authorize(['DELIVERY', 'ADMINISTRAT
     await logAction(req.user.id, 'DELIVERY_STATUS_UPDATED', 'delivery', req.params.orderId, { status })
 
     res.json({ delivery })
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Failed to update delivery status' })
   }
 })

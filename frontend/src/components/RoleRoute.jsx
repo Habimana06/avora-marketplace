@@ -1,14 +1,13 @@
-import { Navigate } from 'react-router-dom';
-import { getRoleHomePath } from './auth';
+import { Navigate } from 'react-router-dom'
 
-export function RoleRoute({ user, role, children }) {
+export default function RoleRoute({ user, role, children }) {
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace />
   }
-
+  
   if (user.role !== role) {
-    return <Navigate to={getRoleHomePath(user.role)} replace />;
+    return <Navigate to="/" replace />
   }
 
-  return children;
+  return children
 }

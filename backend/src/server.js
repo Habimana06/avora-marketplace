@@ -12,7 +12,7 @@ import productRoutes from './routes/product.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import workshopRoutes from './routes/workshop.routes.js';
-import deliveryRoutes from './routes/delivery.routes.js';
+import wishlistRoutes from './routes/wishlist.routes.js';
 
 const redisClient = getRedis();
 
@@ -96,7 +96,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/workshop', workshopRoutes);
-app.use('/api/delivery', deliveryRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ error: 'Route not found' });
